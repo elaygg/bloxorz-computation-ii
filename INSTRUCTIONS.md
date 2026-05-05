@@ -58,3 +58,62 @@ Bonus Tasks (+20% Grade): You will implement an Improved UI using libraries like
 +1
 
 Report: Write the instructions to run the game and document the UI/Undo bonus features you implemented.
+
+
+
+
+
+# 🐙 GitHub Mini-Tutorial: How We Work
+Hey team! Since we are using a professional Git workflow (and the main branch is protected), you cannot upload code directly to main.
+
+Here is the exact step-by-step process you need to follow every time you work on your part. (I recommend using VS Code, as it has a built-in terminal).
+
+🛠️ Step 0: First-time setup (Do this only once)
+Open your terminal / command prompt.
+
+Clone the repository to your computer:
+git clone [repository_link]
+
+Go into the project folder:
+cd bloxorz-computation-ii
+
+🌿 Step 1: Create your personal branch
+Before you type a single line of code, create a safe space (branch) for your role:
+git checkout -b feature-your-role-name
+(Example: git checkout -b feature-board or git checkout -b feature-astar)
+
+💻 Step 2: Write your code
+Open the Python file assigned to you (e.g., board.py) and start writing your logic. Test it locally to make sure it works!
+
+💾 Step 3: Save (Commit) your work
+Once you finish a logical piece of work, save it:
+
+Stage your changes:
+git add .
+
+Commit with a clear, descriptive message (Professors will read this!):
+git commit -m "Added fragile tiles logic to board.py"
+
+🚀 Step 4: Upload (Push) to GitHub
+Send your branch from your computer to our shared GitHub repository:
+git push origin feature-your-role-name
+
+🔀 Step 5: Create a Pull Request (PR)
+Go to our repository page on GitHub.com.
+
+You will see a big green button that says "Compare & pull request". Click it!
+
+Add a short description of what you did.
+
+Click "Create pull request".
+
+Wait for me (or another team member) to review and approve it! Once approved, your code will be merged into main.
+
+🔄 Step 6: Get the latest updates
+When someone else finishes their task and it gets merged into main, you need to download their code so your files are up to date:
+
+Switch back to main: git checkout main
+
+Download updates: git pull
+
+If you get any errors or feel stuck, DO NOT PANIC! Send a screenshot to the chat, and we will fix it together in 2 minutes. Happy coding! 🚀
