@@ -16,15 +16,86 @@ def main():
     """Main menu and level progression loop."""
     print("Welcome to Bloxorz!")
     
-    # Initialize game
+    while True:
+        print("\n1. Play Manual")
+        print("2. AI Solve (BFS)")
+        print("3. AI Solve (A*)")
+        print("4. Exit")
+        choice = input("Choose: ")
+        
+        if choice == "1":
+            play_manual()
+        elif choice == "2":
+            run_ai_solve("bfs")
+        elif choice == "3":
+            run_ai_solve("astar")
+        elif choice == "4":
+            print("Goodbye!")
+            break
+        else:
+            print("Invalid choice")
+
+
+def play_manual():
+    """Manual gameplay loop."""
     game = Game(LEVEL_1)
     
-    # TODO: Add your while loop, menu logic (1. Play, 2. AI Solve), etc.
-    # game.display_board()
+    while True:
+        game.display_board()
+        print("WASD=Move | U=Undo | R=Replay | Q=Quit")
+        cmd = input("Command: ").lower()
+        
+        if cmd == "q":
+            break
+        elif cmd == "u":
+            if game.undo():
+                print("Undone!")
+            else:
+                print("Nothing to undo")
+        elif cmd == "r":
+            game.replay()
+        elif cmd in ["w", "a", "s", "d"]:
+            direction = {"w": "up", "s": "down", "a": "left", "d": "right"}[cmd]
+            game.record_state()
+            game.block.move(direction)
+            game.move_count += 1
+            
+            status = game.check_game_status()
+            if status == "win":
+                game.display_board()
+                print(f"You won in {game.move_count} moves!")
+                break
+            elif status == "lose":
+                game.display_board()
+                print("Game over!")
+                break
+
+
+def run_ai_solve(method: str):
+    """Run AI solver and display solution."""
+    game = Game(LEVEL_1)
     
-    # Example of how solvers will be called later:
-    # basic_solver = BasicSolver(game.board, game.block.get_state())
-    # astar_solver = AStarSolver(game.board, game.block.get_state())
+    if method == "bfs":
+        solver = BasicSolver(game.board, game.block.get_state())
+        solution = solver.solve_bfs()
+    else:
+        solver = AStarSolver(game.board, game.block.get_state())
+        solution = solver.solve_astar()
+    
+    if not solution:
+        print("No solution found")
+        return
+    
+    print(f"Solution found: {len(solution)} moves")
+    print(" -> ".join(solution))
+    
+    for direction in solution:
+        game.display_board()
+        input("Press Enter to continue...")
+        game.block.move(direction)
+    
+    game.display_board()
+    print("Solved!")
 
 if __name__ == "__main__":
     main()
