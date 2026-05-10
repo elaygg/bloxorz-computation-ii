@@ -24,11 +24,91 @@ class Block:
 
     def get_occupied_cells(self) -> List[Tuple[int, int]]:
         """Returns a list of (row, col) tuples currently occupied by the block."""
-        pass  # TODO: Paste logic here
+        # Upright position
+        if self.r1 == self.r2 and self.c1 == self.c2:
+            return [(self.r1, self.c1)]
+
+        # Lying down position
+        return [(self.r1, self.c1), (self.r2, self.c2)]
+
+        pass  
 
     def move(self, direction: str) -> None:
         """
         Updates the coordinates based on the movement direction.
         Directions: 'up', 'down', 'left', 'right'
         """
-        pass  # TODO: Paste the math/rolling logic here
+        if self.r1 == self.r2 and self.c1 == self.c2:
+         r, c = self.r1, self.c1
+        
+            if direction == "up":
+                self.r1, self.c1 = r - 2, c
+                self.r2, self.c2 = r - 1, c
+
+            elif direction == "down":
+                self.r1, self.c1 = r + 1, c
+                self.r2, self.c2 = r + 2, c
+
+            elif direction == "left":
+                self.r1, self.c1 = r, c - 2
+                self.r2, self.c2 = r, c - 1
+
+            elif direction == "right":
+                self.r1, self.c1 = r, c + 1
+                self.r2, self.c2 = r, c + 2
+
+        #HORIZONTAL(same row)
+        elif self.r1 == self.r2:
+
+            row = self.r1
+            left_c = min(self.c1, self.c2)
+            right_c = max(self.c1, self.c2)
+
+            if direction == "up":
+                self.r1 -= 1
+                self.r2 -= 1
+
+            elif direction == "down":
+                self.r1 += 1
+                self.r2 += 1
+
+            elif direction == "left":
+                self.r1 = row
+                self.c1 = left_c - 1
+                self.r2 = row
+                self.c2 = left_c - 1
+
+            elif direction == "right":
+                self.r1 = row
+                self.c1 = right_c + 1
+                self.r2 = row
+                self.c2 = right_c + 1
+
+
+        #VERTICAL (same column)
+        elif self.c1 == self.c2:
+
+            col = self.c1
+            top_r = min(self.r1, self.r2)
+            bottom_r = max(self.r1, self.r2)
+
+            if direction == "up":
+                self.r1 = top_r - 1
+                self.c1 = col
+                self.r2 = top_r - 1
+                self.c2 = col
+
+            elif direction == "down":
+                self.r1 = bottom_r + 1
+                self.c1 = col
+                self.r2 = bottom_r + 1
+                self.c2 = col
+
+            elif direction == "left":
+                self.c1 -= 1
+                self.c2 -= 1
+
+            elif direction == "right":
+                self.c1 += 1
+                self.c2 += 1
+        pass  
