@@ -16,12 +16,24 @@ class Board:
         Returns the tile type at the given coordinates.
         Returns -1 if out of bounds.
         """
-        pass  # TODO: Paste logic here
+        if not self.is_valid_position(r, c):
+          return -1
+
+        return self.matrix[r][c]
+        
 
     def is_valid_position(self, r: int, c: int) -> bool:
         """Checks if the coordinates are inside the board boundaries."""
-        pass  # TODO: Paste logic here
+        return 0 <= r < self.rows and 0 <= c < self.cols
+         
 
     def get_target_pos(self) -> Tuple[int, int]:
         """Finds and returns the (row, col) of the target tile (9)."""
-        pass  # TODO: Paste logic here
+         for r in range(self.rows):
+            for c in range(self.cols):
+
+                if self.matrix[r][c] == 9:
+                    return (r, c)
+
+        return (-1, -1)
+        
