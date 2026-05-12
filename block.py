@@ -6,7 +6,6 @@ class Block:
     """
     Represents the Bloxorz block and handles all rolling mechanics.
     """
-
     def __init__(self, start_row, start_col):
         """
         Initializes the block in an upright position.
@@ -15,7 +14,6 @@ class Block:
             start_row: Starting row.
             start_col: Starting column.
         """
-
         # Position 1
         self.r1 = start_row
         self.c1 = start_col
@@ -35,7 +33,6 @@ class Block:
         Returns:
             'standing', 'horizontal', or 'vertical'
         """
-
         # Standing Upright
         if self.r1 == self.r2 and self.c1 == self.c2:
             return "standing"
@@ -59,7 +56,6 @@ class Block:
         Returns:
             List of occupied (row, col) tuples.
         """
-
         return [
             (self.r1, self.c1),
             (self.r2, self.c2)
@@ -77,7 +73,6 @@ class Block:
             direction:
                 'up', 'down', 'left', or 'right'
         """
-
         orientation = self.get_orientation()
 
         # =====================================================
@@ -85,24 +80,19 @@ class Block:
         # =====================================================
 
         if orientation == "standing":
-
             if direction == "up":
-
                 self.r1 -= 2
                 self.r2 -= 1
 
             elif direction == "down":
-
                 self.r1 += 1
                 self.r2 += 2
 
             elif direction == "left":
-
                 self.c1 -= 2
                 self.c2 -= 1
 
             elif direction == "right":
-
                 self.c1 += 1
                 self.c2 += 2
 
@@ -111,30 +101,23 @@ class Block:
         # =====================================================
 
         elif orientation == "horizontal":
-
             # Standing Horizontally (Falls Upright)
             if direction == "left":
-
                 new_col = self.c1 - 1
-
                 self.c1 = new_col
                 self.c2 = new_col
 
             elif direction == "right":
-
                 new_col = self.c2 + 1
-
                 self.c1 = new_col
                 self.c2 = new_col
 
             # Moves while staying horizontal
             elif direction == "up":
-
                 self.r1 -= 1
                 self.r2 -= 1
 
             elif direction == "down":
-
                 self.r1 += 1
                 self.r2 += 1
 
@@ -143,31 +126,23 @@ class Block:
         # =====================================================
 
         elif orientation == "vertical":
-
             # Standing Vertically (Falls Upright)
             if direction == "up":
-
                 new_row = self.r1 - 1
-
                 self.r1 = new_row
                 self.r2 = new_row
 
             elif direction == "down":
-
                 new_row = self.r2 + 1
-
                 self.r1 = new_row
                 self.r2 = new_row
 
             # Moves while staying vertical
-
             elif direction == "left":
-
                 self.c1 -= 1
                 self.c2 -= 1
 
             elif direction == "right":
-
                 self.c1 += 1
                 self.c2 += 1
 
@@ -181,12 +156,10 @@ class Block:
         """
         Keeps positions ordered consistently.
         """
-
         positions = sorted([
             (self.r1, self.c1),
             (self.r2, self.c2)
         ])
-
         (self.r1, self.c1), (self.r2, self.c2) = positions
 
     # -------------------------------------------------
@@ -194,7 +167,6 @@ class Block:
     # -------------------------------------------------
 
     def print_position(self):
-
         print("Position 1:", (self.r1, self.c1))
         print("Position 2:", (self.r2, self.c2))
         print("Cells:", self.get_cells())
