@@ -156,11 +156,13 @@ def play_manual(level_num: int):
                 else:
                     diff = moves - par
                     print(f"Solved in {moves} moves (par: {par}, +{diff})")
+
+                last_history = game.history.copy()
                 
                 while True:
                     print("\nOptions:")
                     print("1. Replay Level")
-                    print("2. Next Level")
+                    print("2. Watch Last Try")
                     print("3. Exit")
                     choice = input("Choose: ").strip()
                     
@@ -168,11 +170,8 @@ def play_manual(level_num: int):
                         play_manual(level_num)
                         return
                     elif choice == "2":
-                        if level_num < len(LEVELS):
-                            play_manual(level_num + 1)
-                            return
-                        else:
-                            print("No more levels!")
+                        replay_last_try(level_num, last_history)
+                        return
                     elif choice == "3":
                         return
                     else:
@@ -181,20 +180,34 @@ def play_manual(level_num: int):
             elif status == "lose":
                 game.display_board()
                 print("Game over!")
+
+                last_history = game.history.copy()
                 
                 while True:
                     print("\nOptions:")
                     print("1. Replay Level")
-                    print("2. Exit")
+                    print("2. Watch Last Try")
+                    print("3. Exit")
                     choice = input("Choose: ").strip()
                     
                     if choice == "1":
                         play_manual(level_num)
                         return
                     elif choice == "2":
+                        replay_last_try(level_num, last_history)
+                        return
+                    elif choice == "3":
                         return
                     else:
                         print("Invalid choice")
+
+
+def replay_last_try(level_num: int, history):
+    """Replay the moves from the last attempt."""
+    _, level_matrix = LEVELS[level_num]
+    temp_game = Game(level_matrix)
+    temp_game.history = history.copy()
+    temp_game.replay()
 
 
 def run_ai_solve(level_num: int, method: str):
