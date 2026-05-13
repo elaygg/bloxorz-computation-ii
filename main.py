@@ -127,7 +127,7 @@ def play_manual(level_num: int):
     
     while True:
         game.display_board()
-        print("WASD=Move | U=Undo | R=Replay | Q=Quit")
+        print("WASD=Move | U=Undo | R=Replay | X=Restart | Q=Quit")
         cmd = input("Command: ").lower()
         
         if cmd == "q":
@@ -139,6 +139,9 @@ def play_manual(level_num: int):
                 print("Nothing to undo")
         elif cmd == "r":
             game.replay()
+        elif cmd == "x":
+            play_manual(level_num)
+            return
         elif cmd in ["w", "a", "s", "d"]:
             direction = {"w": "up", "s": "down", "a": "left", "d": "right"}[cmd]
             game.record_state()
