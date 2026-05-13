@@ -5,30 +5,88 @@ from game import Game
 from basic_solvers import BasicSolver
 from astar_solver import AStarSolver
 
-# Sample level
 LEVEL_1 = [
     [2, 1, 1, 1, 1],
     [1, 1, 1, 0, 1],
     [1, 1, 1, 1, 9]
 ]
 
+LEVEL_2 = [
+    [2, 1, 1, 1, 0, 0, 0],
+    [1, 1, 0, 1, 1, 0, 0],
+    [0, 1, 1, 1, 1, 1, 0],
+    [0, 0, 0, 1, 1, 1, 9],
+    [0, 0, 0, 0, 1, 1, 1]
+]
+
+LEVEL_3 = [
+    [2, 1, 1, 1, 1, 0],
+    [1, 1, 1, 1, 1, 0],
+    [1, 1, 1, 1, 1, 1],
+    [0, 1, 1, 0, 0, 1],
+    [0, 0, 0, 0, 1, 1],
+    [0, 0, 0, 0, 0, 9]
+]
+
+LEVEL_4 = [
+    [2, 1, 1, 0, 0, 0, 0, 0],
+    [0, 1, 1, 1, 0, 0, 0, 0],
+    [0, 1, 1, 1, 1, 0, 0, 0],
+    [0, 0, 0, 1, 1, 0, 0, 0],
+    [0, 0, 0, 1, 1, 1, 0, 0],
+    [0, 0, 0, 0, 1, 1, 1, 0],
+    [0, 0, 0, 0, 0, 1, 1, 0],
+    [0, 0, 0, 0, 0, 1, 1, 9]
+]
+
+
+LEVELS = {
+    1: ("Level 1", LEVEL_1),
+    2: ("Level 2", LEVEL_2),
+    3: ("Level 3", LEVEL_3),
+    4: ("Level 4", LEVEL_4)
+}
+
+_par_cache = {}
+
+def get_par_score(level_num: int) -> int:
+    """Calculate optimal moves for a level using BFS."""
+    if level_num in _par_cache:
+        return _par_cache[level_num]
+    
+    _, level_matrix = LEVELS[level_num]
+    game = Game(level_matrix)
+    solver = BasicSolver(game.board, game.block.get_state())
+    solution = solver.solve_bfs()
+    
+    par = len(solution) if solution else 0
+    _par_cache[level_num] = par
+    return par
+
 def main():
     """Main menu and level progression loop."""
-    print("Welcome to Bloxorz!")
+    print("Bloxorz Solver")
     
     while True:
-        print("\n1. Play Manual")
+        print("\nMain Menu")
+        print("1. Play Manual")
         print("2. AI Solve (BFS)")
         print("3. AI Solve (A*)")
         print("4. Exit")
-        choice = input("Choose: ")
+        choice = input("Choose: ").strip()
         
         if choice == "1":
-            play_manual()
+            level_num = choose_level()
+            if level_num:
+                play_manual(level_num)
         elif choice == "2":
-            run_ai_solve("bfs")
+            level_num = choose_level()
+            if level_num:
+                run_ai_solve(level_num, "bfs")
         elif choice == "3":
-            run_ai_solve("astar")
+            level_num = choose_level()
+            if level_num:
+                run_ai_solve(level_num, "astar")
         elif choice == "4":
             print("Goodbye!")
             break
@@ -36,9 +94,36 @@ def main():
             print("Invalid choice")
 
 
-def play_manual():
+def choose_level():
+    """Allow player to select a level."""
+    print("\nSelect Level")
+    for num, (name, _) in LEVELS.items():
+        print(f"{num}. {name}")
+    print("0. Back")
+    
+    try:
+        choice = int(input("Choose: ").strip())
+        if choice in LEVELS:
+            return choice
+        elif choice == 0:
+            return None
+        else:
+            print("Invalid level")
+            return None
+    except ValueError:
+        print("Please enter a number")
+        return None
+
+
+def play_manual(level_num: int):
     """Manual gameplay loop."""
-    game = Game(LEVEL_1)
+    _, level_matrix = LEVELS[level_num]
+    game = Game(level_matrix)
+    
+    print(f"\n{LEVELS[level_num][0]}")
+    print("Calculating optimal solution...")
+    par = get_par_score(level_num)
+    print(f"Par: {par} moves")
     
     while True:
         game.display_board()
@@ -63,17 +148,63 @@ def play_manual():
             status = game.check_game_status()
             if status == "win":
                 game.display_board()
-                print(f"You won in {game.move_count} moves!")
-                break
+                moves = game.move_count
+                if moves < par:
+                    print(f"Excellent! Solved in {moves} moves (par: {par})")
+                elif moves == par:
+                    print(f"Perfect! Matched par with {moves} moves!")
+                else:
+                    diff = moves - par
+                    print(f"Solved in {moves} moves (par: {par}, +{diff})")
+                
+                while True:
+                    print("\nOptions:")
+                    print("1. Replay Level")
+                    print("2. Next Level")
+                    print("3. Exit")
+                    choice = input("Choose: ").strip()
+                    
+                    if choice == "1":
+                        play_manual(level_num)
+                        return
+                    elif choice == "2":
+                        if level_num < len(LEVELS):
+                            play_manual(level_num + 1)
+                            return
+                        else:
+                            print("No more levels!")
+                    elif choice == "3":
+                        return
+                    else:
+                        print("Invalid choice")
+                
             elif status == "lose":
                 game.display_board()
                 print("Game over!")
-                break
+                
+                while True:
+                    print("\nOptions:")
+                    print("1. Replay Level")
+                    print("2. Exit")
+                    choice = input("Choose: ").strip()
+                    
+                    if choice == "1":
+                        play_manual(level_num)
+                        return
+                    elif choice == "2":
+                        return
+                    else:
+                        print("Invalid choice")
 
 
-def run_ai_solve(method: str):
+def run_ai_solve(level_num: int, method: str):
     """Run AI solver and display solution."""
-    game = Game(LEVEL_1)
+    _, level_matrix = LEVELS[level_num]
+    game = Game(level_matrix)
+    
+    print(f"\n{LEVELS[level_num][0]}")
+    print("Calculating par score...")
+    par = get_par_score(level_num)
     
     if method == "bfs":
         solver = BasicSolver(game.board, game.block.get_state())
@@ -87,19 +218,20 @@ def run_ai_solve(method: str):
         return
     
     solver_name = "BFS" if method == "bfs" else "A*"
-    print(f"\n{solver_name} Solution found in {len(solution)} moves!")
+    moves = len(solution)
+    print(f"\n{solver_name} Solution found in {moves} moves (par: {par})")
     print(" -> ".join(solution))
     
     move_count = 0
     for direction in solution:
         game.display_board()
         move_count += 1
-        print(f"Move {move_count}/{len(solution)}: {direction}")
+        print(f"Move {move_count}/{moves}: {direction}")
         input("Press Enter to continue...")
         game.block.move(direction)
     
     game.display_board()
-    print(f"✓ Solved in {len(solution)} moves by {solver_name}!")
+    print(f"{solver_name} solved it in {moves} moves!")
 
 if __name__ == "__main__":
     main()
