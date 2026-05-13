@@ -27,7 +27,7 @@ class AStarSolver:
         
         return True
 
-    def _is_goal_state(self, state: State,target_r: int, target_c: int) -> bool:
+    def _is_goal_state(self, state: State, target_r: int, target_c: int) -> bool:
         """Helper method to check if state is UPRIGHT on target (9)."""
         return state.get_orientation() == "UPRIGHT" and state.r1 == target_r and state.c1 == target_c
 
@@ -37,12 +37,10 @@ class AStarSolver:
         Must be admissible (never overestimate the distance).
         """
         row_distance = abs(state.r1 - target_r)
-
         col_distance = abs(state.c1 - target_c)
-
         total_distance = row_distance + col_distance
 
-        return total_distance / 2
+        return total_distance / 2.0
 
     def solve_astar(self) -> List[str]:
         """
@@ -53,7 +51,7 @@ class AStarSolver:
         if target_r == -1:
             return []
         
-        pq = [] #priority queue
+        pq = [] # priority queue
         counter = itertools.count()
 
         start_state = self.initial_state
@@ -72,7 +70,7 @@ class AStarSolver:
                 continue
 
             for direction in self.directions:
-                temp_block = Block(self.board, 0, 0)
+                temp_block = Block(0, 0)
                 temp_block.set_state(current_state)
                 temp_block.move(direction)
                 new_state = temp_block.get_state()
