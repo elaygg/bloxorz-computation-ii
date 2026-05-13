@@ -86,16 +86,20 @@ def run_ai_solve(method: str):
         print("No solution found")
         return
     
-    print(f"Solution found: {len(solution)} moves")
+    solver_name = "BFS" if method == "bfs" else "A*"
+    print(f"\n{solver_name} Solution found in {len(solution)} moves!")
     print(" -> ".join(solution))
     
+    move_count = 0
     for direction in solution:
         game.display_board()
+        move_count += 1
+        print(f"Move {move_count}/{len(solution)}: {direction}")
         input("Press Enter to continue...")
         game.block.move(direction)
     
     game.display_board()
-    print("Solved!")
+    print(f"✓ Solved in {len(solution)} moves by {solver_name}!")
 
 if __name__ == "__main__":
     main()

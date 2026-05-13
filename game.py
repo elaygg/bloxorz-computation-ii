@@ -23,7 +23,7 @@ class Game:
         for r in range(self.board.rows):
             for c in range(self.board.cols):
                 if self.board.get_tile(r, c) == 2:
-                    return Block(self.board, r, c)
+                    return Block(r, c)
         raise ValueError("Starting position (tile 2) not found on board")
 
     def check_game_status(self) -> str:
