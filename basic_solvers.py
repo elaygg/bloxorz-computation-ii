@@ -1,14 +1,5 @@
 """
-Basic Search algorithms (BFS and DFS) to solve the Bloxorz level.
-
-Time & Space Complexity (summary):
-- BFS: Time O(b^d) in the worst case (b = branching factor, d = depth to goal).
-    Space O(b^d) because BFS stores a frontier of that order.
-- DFS: Time O(b^m) worst-case (m = maximum depth searched); can be exponential.
-    Space O(m) for the stack (plus visited set if used, which may grow similarly to time).
-
-These are basic textbook bounds for uninformed search algorithms. In our grid
-problem b <= 4 (four directions) and states are bounded by board size.
+Basic Search algorithms (BFS a nd DFS).
 """
 from typing import List
 from board import Board
@@ -49,7 +40,10 @@ class BasicSolver:
         Breadth-First Search algorithm.
         Returns a list of directions, e.g., ["up", "right", "down"]
         """
+
         # Standard BFS: queue holds (state, path_taken)
+        # collections.deque is used instead of a standard list because popleft() is an O(1) operation.
+        # Using pop(0) on a python list would be O(n), severely degrading performance on deep searches.
         queue = deque()
         visited = set()
 
@@ -73,6 +67,7 @@ class BasicSolver:
                 blk.move(direction)
                 new_state = State(blk.r1, blk.c1, blk.r2, blk.c2)
 
+                # Set lookup is O(1), preventing infinite loops.
                 if new_state in visited:
                     continue
 

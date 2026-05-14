@@ -32,6 +32,8 @@ class Game:
         """
         occupied = self.block.get_occupied_cells()
         
+        # Edge case handling: We must verify the block is fully supported before checking for a win.
+        # This prevents a false "win" if half the block is on the target and half is over a gap.
         for r, c in occupied:
             if not self.board.is_valid_position(r, c):
                 return "lose"
@@ -51,6 +53,9 @@ class Game:
 
     def undo(self) -> bool:
         """Undo last move. Returns True if successful."""
+
+        # The history operates as a LIFO (Last-In-First-Out) stack.
+        # Popping the last state provides an O(1) rollback mechanism.
         if not self.history:
             return False
         last_state = self.history.pop()
