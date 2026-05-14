@@ -103,13 +103,11 @@ class Game:
                     row_str.append(Fore.YELLOW + "+" + Style.RESET_ALL)
                 elif tile == 9:
                     row_str.append(Fore.GREEN + Style.BRIGHT + "X" + Style.RESET_ALL)
-                else:
-                    row_str.append("?")
             
             print(" ".join(row_str))
         
         print("=" * (self.board.cols * 2 - 1) + "\n")
-        print(f"Moves: {self.move_count} | {Fore.WHITE}· Ground{Style.RESET_ALL} | {Fore.YELLOW}+ Start{Style.RESET_ALL} | {Fore.GREEN}X Target{Style.RESET_ALL} | {Fore.CYAN}B Block{Style.RESET_ALL}")
+        print(f"Moves: {self.move_count} | {Fore.WHITE}· Ground{Style.RESET_ALL} | {Fore.YELLOW}+ Start{Style.RESET_ALL} | {Fore.CYAN}X Target{Style.RESET_ALL} | {Fore.GREEN}B Block{Style.RESET_ALL}")
         if self.can_undo():
             print("Press U to undo last move")
         print()
