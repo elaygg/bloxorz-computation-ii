@@ -71,8 +71,9 @@ def main():
         print("\nMain Menu")
         print("1. Play Manual")
         print("2. AI Solve (BFS)")
-        print("3. AI Solve (A*)")
-        print("4. Exit")
+        print("3. AI Solve (DFS)")
+        print("4. AI Solve (A*)")
+        print("5. Exit")
         choice = input("Choose: ").strip()
         
         if choice == "1":
@@ -86,8 +87,12 @@ def main():
         elif choice == "3":
             level_num = choose_level()
             if level_num:
-                run_ai_solve(level_num, "astar")
+                run_ai_solve(level_num, "dfs")
         elif choice == "4":
+            level_num = choose_level()
+            if level_num:
+                run_ai_solve(level_num, "astar")
+        elif choice == "5":
             print("Goodbye!")
             break
         else:
@@ -118,91 +123,82 @@ def choose_level():
 def play_manual(level_num: int):
     """Manual gameplay loop."""
     _, level_matrix = LEVELS[level_num]
-    game = Game(level_matrix)
     
     print(f"\n{LEVELS[level_num][0]}")
     print("Calculating optimal solution...")
     par = get_par_score(level_num)
     print(f"Par: {par} moves")
-    
+
     while True:
-        game.display_board()
-        print("WASD=Move | U=Undo | R=Replay | X=Restart | Q=Quit")
-        cmd = input("Command: ").lower()
-        
-        if cmd == "q":
-            break
-        elif cmd == "u":
-            if game.undo():
-                print("Undone!")
-            else:
-                print("Nothing to undo")
-        elif cmd == "r":
-            game.replay()
-        elif cmd == "x":
-            play_manual(level_num)
-            return
-        elif cmd in ["w", "a", "s", "d"]:
-            direction = {"w": "up", "s": "down", "a": "left", "d": "right"}[cmd]
-            game.record_state()
-            game.block.move(direction)
-            game.move_count += 1
-            
-            status = game.check_game_status()
-            if status == "win":
-                game.display_board()
-                moves = game.move_count
-                if moves < par:
-                    print(f"Excellent! Solved in {moves} moves (par: {par})")
-                elif moves == par:
-                    print(f"Perfect! Matched par with {moves} moves!")
+        game = Game(level_matrix)
+
+        while True:
+            game.display_board()
+            print("WASD=Move | U=Undo | R=Replay | X=Restart | Q=Quit")
+            cmd = input("Command: ").lower()
+
+            if cmd == "q":
+                return
+            elif cmd == "u":
+                if game.undo():
+                    print("Undone!")
                 else:
-                    diff = moves - par
-                    print(f"Solved in {moves} moves (par: {par}, +{diff})")
+                    print("Nothing to undo")
+            elif cmd == "r":
+                game.replay()
+            elif cmd == "x":
+                break
+            elif cmd in ["w", "a", "s", "d"]:
+                direction = {"w": "up", "s": "down", "a": "left", "d": "right"}[cmd]
+                game.record_state()
+                game.block.move(direction)
+                game.move_count += 1
 
-                last_history = game.history.copy()
-                
-                while True:
-                    print("\nOptions:")
-                    print("1. Replay Level")
-                    print("2. Watch Last Try")
-                    print("3. Exit")
-                    choice = input("Choose: ").strip()
-                    
-                    if choice == "1":
-                        play_manual(level_num)
-                        return
-                    elif choice == "2":
-                        replay_last_try(level_num, last_history)
-                        return
-                    elif choice == "3":
-                        return
+                status = game.check_game_status()
+                if status == "win":
+                    game.display_board()
+                    moves = game.move_count
+                    if moves < par:
+                        print(f"Excellent! Solved in {moves} moves (par: {par})")
+                    elif moves == par:
+                        print(f"Perfect! Matched par with {moves} moves!")
                     else:
-                        print("Invalid choice")
-                
-            elif status == "lose":
-                game.display_board()
-                print("Game over!")
+                        diff = moves - par
+                        print(f"Solved in {moves} moves (par: {par}, +{diff})")
 
-                last_history = game.history.copy()
-                
-                while True:
-                    print("\nOptions:")
-                    print("1. Replay Level")
-                    print("2. Watch Last Try")
-                    print("3. Exit")
-                    choice = input("Choose: ").strip()
-                    
-                    if choice == "1":
-                        play_manual(level_num)
-                        return
-                    elif choice == "2":
-                        replay_last_try(level_num, last_history)
-                        return
-                    elif choice == "3":
-                        return
-                    else:
-                        print("Invalid choice")
+                    action = show_attempt_options(level_num, game.history.copy())
+                    if action == "restart":
+                        break
+                    return
+
+                elif status == "lose":
+                    game.display_board()
+                    print("Game over!")
+
+                    action = show_attempt_options(level_num, game.history.copy())
+                    if action == "restart":
+                        break
+                    return
+
+
+def show_attempt_options(level_num: int, history):
+    """Show the post-attempt menu and return the selected action."""
+    while True:
+        print("\nOptions:")
+        print("1. Replay Level")
+        print("2. Watch Last Try")
+        print("3. Exit")
+        choice = input("Choose: ").strip()
+
+        if choice == "1":
+            return "restart"
+        elif choice == "2":
+            replay_last_try(level_num, history)
+            return "exit"
+        elif choice == "3":
+            return "exit"
+        else:
+            print("Invalid choice")
 
 
 def replay_last_try(level_num: int, history):
@@ -225,6 +221,9 @@ def run_ai_solve(level_num: int, method: str):
     if method == "bfs":
         solver = BasicSolver(game.board, game.block.get_state())
         solution = solver.solve_bfs()
+    elif method == "dfs":
+        solver = BasicSolver(game.board, game.block.get_state())
+        solution = solver.solve_dfs()
     else:
         solver = AStarSolver(game.board, game.block.get_state())
         solution = solver.solve_astar()
@@ -233,7 +232,7 @@ def run_ai_solve(level_num: int, method: str):
         print("No solution found")
         return
     
-    solver_name = "BFS" if method == "bfs" else "A*"
+    solver_name = "BFS" if method == "bfs" else "DFS" if method == "dfs" else "A*"
     moves = len(solution)
     print(f"\n{solver_name} Solution found in {moves} moves (par: {par})")
     print(" -> ".join(solution))

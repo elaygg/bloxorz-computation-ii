@@ -1,5 +1,5 @@
 """
-Advanced Search algorithm (A*) with heuristic to solve the Bloxorz level.
+Advanced Search algorithm (A*) with heuristic.
 """
 from typing import List
 from board import Board
@@ -36,10 +36,14 @@ class AStarSolver:
         Heuristic function for A* algorithm.
         Must be admissible (never overestimate the distance).
         """
+
+        # Calculate standard Manhattan distance
         row_distance = abs(state.r1 - target_r)
         col_distance = abs(state.c1 - target_c)
         total_distance = row_distance + col_distance
 
+        # Divided by 2.0 because the block can cover up to 2 cells in a single rolling move.
+        # Pure Manhattan distance would overestimate the cost, breaking A* admissibility.
         return total_distance / 2.0
 
     def solve_astar(self) -> List[str]:
@@ -51,37 +55,55 @@ class AStarSolver:
         if target_r == -1:
             return []
         
-        pq = [] # priority queue
+        # Priority queue stores paths, prioritizing them by the lowest F score.
+        pq = []
+
+        # The counter acts as a tie-breaker for states with identical 'f' scores.
+        # Without it, heapq would attempt to compare State objects directly, causing a TypeError.
         counter = itertools.count()
 
         start_state = self.initial_state
         start_h = self._heuristic(start_state, target_r, target_c)
+
+        # Push a tuple into the queue.
         heapq.heappush(pq, (start_h, 0, next(counter), start_state, []))
 
+        # Stores the lowest cost (g).
         best_g = {start_state: 0}
 
         while pq:
+            # Pop the path with the lowest F score
             f, g, _, current_state, path = heapq.heappop(pq)
 
+            # Check if this specific path has reached the target
             if self._is_goal_state(current_state, target_r, target_c):
                 return path
 
+            # If we've previously found a cheaper path to this exact state, discard this branch.
             if g > best_g.get(current_state, float('inf')):
                 continue
 
+            # Attempt to simulate a move in all 4 directions
             for direction in self.directions:
+                # Create an imaginary clone of the block to simulate the future move
                 temp_block = Block(0, 0)
                 temp_block.set_state(current_state)
                 temp_block.move(direction)
-                new_state = temp_block.get_state()
+                new_state = temp_block.get_state() # Take a "photo" of the new position
 
+                # If the clone didn't fall into the abyss
                 if self._is_valid_state(new_state):
+                    # Calculate the real path cost
                     new_g = g + 1
 
+                    # If we reached this new position faster than ever before (or it's our first time here)
                     if new_g < best_g.get(new_state, float('inf')):
                         best_g[new_state] = new_g
+                        # Calculate the new heuristic from the new point to the finish line
                         h = self._heuristic(new_state, target_r, target_c)
                         new_f = new_g + h
+                        # Append this move to the route history
                         new_path = path + [direction]
+                        # Push this new possible future back into the priority queue to be explored later
                         heapq.heappush(pq, (new_f, new_g, next(counter), new_state, new_path))
         return []
