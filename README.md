@@ -55,9 +55,9 @@ $$h(s) = \frac{|r_{\text{current}} - r_{\text{goal}}| + |c_{\text{current}} - c_
 
 ## Documentation & Resources
 
-* [Project Report (PDF)](Group_14_report.pdf) — Full mathematical and structural breakdown.
-* [Presentation Slides (PDF)](presentation.pdf) — Benchmarks, state space formalization, and performance analysis.
-* [Self Evaluation Matrix (XLSX)](Group_14_selfeval.xlsx) — Detailed team workload distribution.
+* [Project Report (PDF)](docs/Group_14_report.pdf) — Full mathematical and structural breakdown.
+* [Presentation Slides (PDF)](docs/presentation.pdf) — Benchmarks, state space formalization, and performance analysis.
+* [Self Evaluation Matrix (XLSX)](docs/Group_14_selfeval.xlsx) — Detailed team workload distribution.
 
 ---
 
@@ -85,8 +85,11 @@ $$h(s) = \frac{|r_{\text{current}} - r_{\text{goal}}| + |c_{\text{current}} - c_
 ## Contributors
 
 **Amir Namatov:** Implemented A* search algorithm (astar_solver.py), modified Manhattan distance heuristic, heapq priority queue integration, written report.
+
 **Leon Apaydin:** Developed core Game Engine (game.py), main execution loop (main.py), Colorama Terminal UI, Undo/Replay and Move Counter bonus features.
+
 **Mohammad Ammaar:** Implemented Board (board.py) and State (state.py) classes, matrix parsing, coordinate tracking, collision/win logic, and level designs.
+
 **Oghenemega Ogugu:** Implemented Block rolling physical mechanics (block.py), BFS and DFS algorithms (basic_solvers.py), and theoretical complexity analysis.
 
 
