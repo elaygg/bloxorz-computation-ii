@@ -14,6 +14,10 @@ Developed as the Final Project for **Computation II: Algorithms & Data Structure
   * **Undo / Replay:** Rollback state history or watch the AI solve the level step-by-step.
   * **Par Score:** Dynamic calculation of the optimal move count prior to level start.
 
+## Game Interface
+
+![Game Interface](images/interface.png)
+
 ---
 
 ## Algorithmic Analysis & Benchmark (Productivity Paradox)
@@ -49,10 +53,18 @@ $$h(s) = \frac{|r_{\text{current}} - r_{\text{goal}}| + |c_{\text{current}} - c_
 
 ---
 
+## Documentation & Resources
+
+* [Project Report (PDF)](Group_14_report.pdf) — Full mathematical and structural breakdown.
+* [Presentation Slides (PDF)](presentation.pdf) — Benchmarks, state space formalization, and performance analysis.
+* [Self Evaluation Matrix (XLSX)](Group_14_selfeval.xlsx) — Detailed team workload distribution.
+
+---
+
 ## Installation & Usage
 
 **1. Clone the repository:**
-```git clone https://github.com/elaygg/bloxorz-computation-ii.git``` | 
+```git clone https://github.com/elaygg/bloxorz-computation-ii.git```      |        
 ```cd bloxorz-computation-ii```
 
 **2. Create and activate virtual environment:**
@@ -64,6 +76,7 @@ $$h(s) = \frac{|r_{\text{current}} - r_{\text{goal}}| + |c_{\text{current}} - c_
 
 **3. Install dependencies:**
 ```pip install -r requirements.txt```
+
 **4. Run the game:**
 ```python main.py```
 
