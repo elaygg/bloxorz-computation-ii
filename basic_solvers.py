@@ -85,8 +85,8 @@ class BasicSolver:
         Depth-First Search algorithm.
         Returns a list of directions.
         """
-        # Iterative DFS using a stack. We keep a visited set to avoid cycles.
-        stack = []  # will store (state, path)
+        # Iterative DFS using a stack. We keep a visited set to avoid cycles.state, path)
+        stack = [] # will store (state, path)
         visited = set()
 
         if not self._is_valid_state(self.initial_state):
