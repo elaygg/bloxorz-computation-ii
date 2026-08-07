@@ -4,6 +4,13 @@ An automated solver and interactive terminal game for the spatial puzzle **Bloxo
 
 Developed as the Final Project for **Computation II: Algorithms & Data Structures** at **NOVA Information Management School (NOVA IMS)**.
 
+## Tech Stack
+
+* **Language:** Python
+* **Algorithms & Logic:** A* Search, BFS, DFS, Admissible Heuristic Formulation, State-Space Graph Search
+* **Data Structures:** Priority Queues (`heapq`), Deques (`collections.deque`), Hashable State Tuples
+* **CLI / UI:** Colorama
+
 ---
 
 ## Key Features
